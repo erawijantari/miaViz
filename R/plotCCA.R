@@ -472,12 +472,12 @@ setMethod("plotRDA", signature = c(object = "matrix"),
 .add_signif_to_vector_labels <- function(
     vector_label, var_names, signif_data, repl.underscore = " ", ...) {
     # Replace underscores from significance data and variable names to match labels
-    rownames(signif_data) <- vapply(rownames(signif_data), function(x) gsub("_", repl.underscore, x), character(1))
-    var_names <- vapply(var_names, function(x) gsub("_", repl.underscore, x), character(1))
+    rownames(signif_data) <- sapply(rownames(signif_data), function(x) gsub("_", repl.underscore, x))
+    var_names <- sapply(var_names, function(x) gsub("_", repl.underscore, x))
     # Loop through vector labels
-    vector_label <- vapply(vector_label, FUN = function(name) {
+    vector_label <- sapply(vector_label, FUN = function(name) {
         # Get the real variable name from sample metadata
-        var_name <- var_names[vapply(var_names, function(x) grepl(x, name), logical(1))]
+        var_name <- var_names[sapply(var_names, function(x) grepl(x, name))]
         # Add percentage how much this variable explains, and p-value
         new_name <- expr(
             paste(!!name, " (", 
