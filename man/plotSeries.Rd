@@ -82,7 +82,7 @@ This function creates series plot, where x-axis includes e.g. time points, and
 y-axis abundances of selected taxa.
 }
 \examples{
-\donttest{
+\dontrun{
 library(mia)
 # Load data from miaTime package
 library("miaTime")
