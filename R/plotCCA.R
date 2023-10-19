@@ -371,9 +371,9 @@ setMethod("plotRDA", signature = c(object = "matrix"),
     all_var_found <- FALSE
     if (!is.null(vector_data) && length(variable_names) > 0) {
         all_var_found <- all(colSums(
-            vapply(rownames(vector_data), function(x) {
-                vapply(variable_names, function(y) grepl(y, x), logical(1))
-            }, logical(length(variable_names))) == 1)
+            sapply(rownames(vector_data), function(x) {
+                sapply(variable_names, function(y) grepl(y, x))
+            }) == 1)
         )
     }
     
