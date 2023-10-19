@@ -447,14 +447,14 @@ setMethod("plotRDA", signature = c(object = "matrix"),
     # Get variable names from sample metadata
     var_names <- colnames(coldata)
     # Loop through vector labels
-    vector_label <- vapply(vector_label, FUN = function(name) {
+    vector_label <- sapply(vector_label, FUN = function(name) {
         # Get the real variable name from sample metadata
-        var_name <- var_names[vapply(var_names, function(x) grepl(x, name), logical(1))]
+        var_name <- var_names[sapply(var_names, function(x) grepl(x, name))]
         # If the vector label includes also group name
         if (!name %in% var_names) {
             # Get the group name
             group_name <- unique(coldata[[var_name]])[which(
-                vapply(unique(coldata[[var_name]]), function(x) paste0(var_name, x) == name, logical(1))
+                sapply(unique(coldata[[var_name]]), function(x) paste0(var_name, x) == name)
             )]
             # Modify vector so that group is separated from variable name
             new_name <- paste0(var_name, " ", sep.group, " ", group_name)
@@ -464,7 +464,7 @@ setMethod("plotRDA", signature = c(object = "matrix"),
         # Replace underscores with space
         new_name <- gsub("_", repl.underscore, new_name)
         return(new_name)
-    }, character(1))
+    })
     return(vector_label)
 }
 
