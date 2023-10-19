@@ -324,8 +324,8 @@ setMethod("plotRDA", signature = c(object = "matrix"),
             expl_var <- summary(rda)$concont$importance[2, ]*100
         } else{
             # If it cannot be found, give warning
-            warning(paste("RDA/CCA object was not found. Please compute",
-                          "RDA/CCA by using runCCA or calculateCCA."),
+            warning("RDA/CCA object was not found. Please compute ",
+                          "RDA/CCA by using runCCA or calculateCCA.",
                     call. = FALSE)
         }
     }
@@ -425,8 +425,8 @@ setMethod("plotRDA", signature = c(object = "matrix"),
             vector_data[["vector_label"]] <- vector_label
         } else{
             # If it cannot be found, give warning
-            warning(paste("Significance data was not found. please compute",
-                          "CCA/RDA by using runCCA or calculateCCA."),
+            warning("Significance data was not found. please compute ",
+                          "CCA/RDA by using runCCA or calculateCCA.",
                     call. = FALSE)
         }
     }
