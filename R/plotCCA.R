@@ -488,7 +488,7 @@ setMethod("plotRDA", signature = c(object = "matrix"),
                       round(signif_data[var_name, "Pr(>F)"], 3),
                       nsmall = 3)), ")"))
         return(new_name)
-    }, character(1))
+    })
     return(vector_label)
 }
 
