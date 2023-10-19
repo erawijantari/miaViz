@@ -369,10 +369,12 @@ setMethod("plotRDA", signature = c(object = "matrix"),
     variable_names <- colnames(coldata)
     # Check if variable names can be found metadata
     all_var_found <- FALSE
-    if( !is.null(vector_data) && length(variable_names) > 0 ){
+    if (!is.null(vector_data) && length(variable_names) > 0) {
         all_var_found <- all(colSums(
-            sapply(rownames(vector_data), function(x)
-                sapply(variable_names, function(y) grepl(y, x)) )) == 1)
+            vapply(rownames(vector_data), function(x) {
+                vapply(variable_names, function(y) grepl(y, x), logical(1))
+            }, logical(length(variable_names))) == 1)
+        )
     }
     
     # Get vector labels
@@ -441,52 +443,52 @@ setMethod("plotRDA", signature = c(object = "matrix"),
 # Make vector labels more tidy, i.e, separate variable and group names.
 # Replace also underscores with space
 .tidy_vector_labels <- function(
-        vector_label, coldata, sep.group = "\U2012", repl.underscore = " ", ...){
+    vector_label, coldata, sep.group = "\U2012", repl.underscore = " ", ...) {
     # Get variable names from sample metadata
     var_names <- colnames(coldata)
     # Loop through vector labels
-    vector_label <- sapply(vector_label, FUN = function(name){
+    vector_label <- vapply(vector_label, FUN = function(name) {
         # Get the real variable name from sample metadata
-        var_name <- var_names[ sapply(var_names, function(x) grepl(x, name)) ]
+        var_name <- var_names[vapply(var_names, function(x) grepl(x, name), logical(1))]
         # If the vector label includes also group name
-        if( !name %in% var_names ){
+        if (!name %in% var_names) {
             # Get the group name
-            group_name <- unique( coldata[[var_name]] )[ 
-                which( paste0(var_name, unique( coldata[[var_name]] )) == name ) ]
+            group_name <- unique(coldata[[var_name]])[which(
+                vapply(unique(coldata[[var_name]]), function(x) paste0(var_name, x) == name, logical(1))
+            )]
             # Modify vector so that group is separated from variable name
             new_name <- paste0(var_name, " ", sep.group, " ", group_name)
-        } else{
+        } else {
             new_name <- name
         }
         # Replace underscores with space
         new_name <- gsub("_", repl.underscore, new_name)
         return(new_name)
-    })
+    }, character(1))
     return(vector_label)
 }
 
 # This function adds significance info to vector labels
 .add_signif_to_vector_labels <- function(
-        vector_label, var_names, signif_data, repl.underscore = " ", ...){
+    vector_label, var_names, signif_data, repl.underscore = " ", ...) {
     # Replace underscores from significance data and variable names to match labels
-    rownames(signif_data) <- sapply(rownames(signif_data), function(x) gsub("_", repl.underscore, x))
-    var_names <- sapply(var_names, function(x) gsub("_", repl.underscore, x))
+    rownames(signif_data) <- vapply(rownames(signif_data), function(x) gsub("_", repl.underscore, x), character(1))
+    var_names <- vapply(var_names, function(x) gsub("_", repl.underscore, x), character(1))
     # Loop through vector labels
-    vector_label <- sapply(vector_label, FUN = function(name){
+    vector_label <- vapply(vector_label, FUN = function(name) {
         # Get the real variable name from sample metadata
-        var_name <- var_names[ sapply(var_names, function(x) grepl(x, name)) ]
+        var_name <- var_names[vapply(var_names, function(x) grepl(x, name), logical(1))]
         # Add percentage how much this variable explains, and p-value
         new_name <- expr(
             paste(!!name, " (", 
                   !!format(
-                      round( signif_data[var_name, "Explained variance"]*100, 1),
+                      round(signif_data[var_name, "Explained variance"] * 100, 1),
                       nsmall = 1), "%, ", italic("P"), " = ",
-                  !!gsub("0\\.","\\.", format(
-                      round( signif_data[var_name, "Pr(>F)"], 3),
+                  !!gsub("0\\.", "\\.", format(
+                      round(signif_data[var_name, "Pr(>F)"], 3),
                       nsmall = 3)), ")"))
-        
         return(new_name)
-    })
+    }, character(1))
     return(vector_label)
 }
 
